@@ -87,35 +87,16 @@ public class EventBus {
     }
 
     private void invoke(final Object obj, final Subscriber busMethod, final Object eventParam){
-        try {
-            switch (busMethod.getThreadModel()){
-                case MAIN:
-                    if (isMainThread()){
-                        //直接处理
-                        busMethod.getMethod().invoke(obj,eventParam);
-                    }else {
-                        //通过handler调度到主线程
-                        mHandler.post(new EventRunable(busMethod, obj, eventParam));
-                    }
-                    break;
-                default:
-                    //子线程模式
-                    if (isMainThread()){
-                        //交由线程池处理
-                        executorService.execute(new EventRunable(busMethod, obj, eventParam));
-                    }else {
-                        //直接处理
-                        busMethod.getMethod().invoke(obj,eventParam);
-                    }
-                    break;
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        switch (busMethod.getThreadModel()){
+            case MAIN:
+                //通过handler调度到主线程
+                mHandler.post(new EventRunable(busMethod, obj, eventParam));
+                break;
+            default:
+                //交由线程池处理
+                executorService.execute(new EventRunable(busMethod, obj, eventParam));
+                break;
         }
-    }
-
-    private boolean isMainThread(){
-        return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
 
     public void unRegister(Object object){
