@@ -1,5 +1,7 @@
 ## EventBus核心功能加注释详解
 
+掘金：https://juejin.im/post/5d2f38ebf265da1bb80c64b1
+
 ### 核心api
 ```
 register(Object object) //注册
