@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Subscribe {
 
-    ThreadModel thread();
+    ThreadModel thread() default ThreadModel.MAIN;
 
 }
